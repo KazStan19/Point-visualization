@@ -16,7 +16,7 @@ export const Area2 = (props) => {
         canvas.style.width = width*scale+'px'
         canvas.style.height = height*scale+'px'
         canvas.style.position = 'absolute'
-        canvas.style.zIndex = '99'
+        canvas.style.zIndex = '87'
 
         const context = canvas.getContext("2d")
 

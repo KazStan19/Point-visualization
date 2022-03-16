@@ -14,8 +14,8 @@ export const Home = () => {
     const [contours,setContours] = useState([])
     
     let alt = 'empty'
-    let width = 1024
-    let height = 600
+    let width = 1400
+    let height = 750
 
 
       const [fullCoords, setFullCoords] = useState({"coords":[],"name":''})
@@ -24,7 +24,7 @@ export const Home = () => {
 
         e.preventDefault()
         let coords = [(e.clientX - e.target.offsetLeft)/scale ,(e.clientY - e.target.offsetTop)/scale]
-        console.log(e.target.offsetLeft)
+
 
         if(draw === true && fullCoords.coords !== undefined){
     
@@ -117,7 +117,13 @@ export const Home = () => {
         <ThemeContext.Provider  value={{width,height,scale,pic,alt,contours,draw,fullCoords}}>
         <Image />
         <Area2/>
-        <Area/>
+        { contours.map(item =>{
+          let id = Math.floor(Math.random() * 100);
+          if(item.name === pic.name && pic !== ''){
+            return(<Area item={item} key={id} id={id}/>)
+          }
+
+        })}
         </ThemeContext.Provider>
     </div>
     </>
