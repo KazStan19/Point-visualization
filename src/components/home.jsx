@@ -117,13 +117,7 @@ export const Home = () => {
         <ThemeContext.Provider  value={{width,height,scale,pic,alt,contours,draw,fullCoords}}>
         <Image />
         <Area2/>
-        { contours.map(item =>{
-          let id = Math.floor(Math.random() * 100);
-          if(item.name === pic.name && pic !== ''){
-            return(<Area item={item} key={id} id={id}/>)
-          }
-
-        })}
+        <Area />
         </ThemeContext.Provider>
     </div>
     </>
