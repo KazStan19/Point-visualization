@@ -65,7 +65,7 @@ export const Area = (props) => {
         const context = canvas.getContext("2d")
      
         let color = 'red'
-        let opacity = 0.8
+        let opacity = 0.5
         let num = -1
         let name = []
 
@@ -90,7 +90,8 @@ export const Area = (props) => {
         
         context.stroke(name[num].name)
         }}
-        context.fillStyle = 'rgba(255, 255, 255, 0)' 
+        context.fillStyle = color
+        context.globalAlpha = opacity
         context.fill(name[num].name)
         setfirst(name)
     
