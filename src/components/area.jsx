@@ -7,10 +7,12 @@ export const Area = (props) => {
     const contextRef = useRef(null)
     const [first, setfirst] = useState([])
     const {width,height,scale,contours,pic} = useContext(ThemeContext)
+    
 
     function addEvent(event) {
         event = event || window.event;
         var ctx = document.getElementById("canvas").getContext("2d")
+        console.log(first)
 
         let clickPlace = [(event.clientX - event.target.offsetLeft)/scale ,(event.clientY - event.target.offsetTop)/scale]
         
@@ -70,32 +72,40 @@ export const Area = (props) => {
         let name = []
 
         contours.forEach(item=>{
-        
-        if(item.name === pic.name && pic !== ''){
             
-            name.push({"name": new Path2D(),"coords":item.coords.coordinates})
+        
+        if(item.image === pic.name && pic !== ''){
+
+        for(let j=0;j < item.contours.length;j++){
+            
+            name.push({"name": new Path2D(),"coords":item.contours[j].coords})
             num+=1
             context.beginPath(name[num].name)
             context.fillStyle = color
             context.strokeStyle = color
             context.globalAlpha = opacity
-
-        name[num].name.moveTo(item.coords.coordinates[0][0] * scale,item.coords.coordinates[0][1] * scale)
+            
+        name[num].name.moveTo(item.contours[j].coords[0][0] * scale,item.contours[j].coords[0][1] * scale)
         
-        for(let i=1;i < item.coords.coordinates.length;i++){
+        for(let i=1;i < item.contours[j].coords.length;i++){
 
-            name[num].name.lineTo(item.coords.coordinates[i][0] * scale,item.coords.coordinates[i][1] * scale)
-            context.fillRect(item.coords.coordinates[i][0] * scale-5, item.coords.coordinates[i][1] * scale-5, 10, 10);
+            name[num].name.lineTo(item.contours[j].coords[i][0] * scale,item.contours[j].coords[i][1] * scale)
+            context.fillRect(item.contours[j].coords[i][0] * scale-5, item.contours[j].coords[i][1] * scale-5, 10, 10);
             
         
         context.stroke(name[num].name)
         }}
-        context.fillStyle = color
-        context.globalAlpha = opacity
-        context.fill(name[num].name)
+
+
+        
+    }
+
+    
+        
         setfirst(name)
     
     })
+
 
        
 

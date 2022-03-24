@@ -22,7 +22,7 @@ export const Area2 = (props) => {
 
         if(draw === true){
 
-            if(fullCoords.coords !== undefined && fullCoords.name === pic.name){
+            if(fullCoords.coords !== undefined ){
                 if(fullCoords.coords[0] !== undefined){
                 context.beginPath()
   

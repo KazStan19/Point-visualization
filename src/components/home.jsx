@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import { Area } from './area'
 import { Area2 } from './area2'
 import { Image } from './image'
@@ -10,15 +10,19 @@ export const Home = () => {
     const [pic, setPic] = useState('')
     const [draw, setDraw] = useState(false)
     const [save, setSave] = useState(false)
+    const [file, setFile] = useState(false)
+    const [json, setJson] = useState({})
     const [scale, setScale] = useState(1)
     const [contours,setContours] = useState([])
     
     let alt = 'empty'
-    let width = 1400
-    let height = 750
+    let width = 6000
+    let height = 4000
 
+    const [fullCoords, setFullCoords] = useState({"coords":[],"name":''})
 
-      const [fullCoords, setFullCoords] = useState({"coords":[],"name":''})
+    
+    
 
       function onClickHandler(e){
 
@@ -30,17 +34,17 @@ export const Home = () => {
     
           if(fullCoords.coords.length <= 3){
           
-          console.log([e.clientX,e.clientY])
-          setFullCoords(old =>({"coords":[...old.coords,coords],"name":pic.name}))
+          console.log(fullCoords)
+          setFullCoords(old =>({"coords":[...old.coords,coords],"name":'name'}))
           
           }else if(fullCoords.coords[0][0] >= coords[0]-7 && fullCoords.coords[0][0] <= coords[0]+7 && fullCoords.coords[0][1] >= coords[1]-7 && fullCoords.coords[0][1] <= coords[1]+7 ){ 
     
             setSave(true)
-            setFullCoords(old =>({"coords":[...old.coords,fullCoords.coords[0]],"name":pic.name}))
+            setFullCoords(old =>({"coords":[...old.coords,fullCoords.coords[0]],"name":'name'}))
 
           }else if(save === false){
 
-            setFullCoords(old =>({"coords":[...old.coords,coords],"name":pic.name}))
+            setFullCoords(old =>({"coords":[...old.coords,coords],"name":'name'}))
 
           }
 
@@ -56,16 +60,34 @@ export const Home = () => {
         old.coords[old.coords.length-1]= old.coords[0]
 
         setFullCoords(old)
+        
+        let checkIfegz = contours.findIndex(old => old.image === pic.name)
+        console.log(checkIfegz)
 
+        if(checkIfegz === -1){
         setContours(old =>([...old,{
 
+        image: pic.name,
+        contours: [{
         name: fullCoords.name,
-         coords: {
-        type: "LineString",
-        coordinates: fullCoords.coords
+        coords: fullCoords.coords
+        }]
+
+        }]))}
+        else{
+
+          contours[checkIfegz].contours.push({
+
+            
+            name: fullCoords.name,
+            coords: fullCoords.coords
+            
+
+          })
+
         }
 
-        }]))
+        console.log(contours)
   
 
       setFullCoords({"coords":[],"name":''})
@@ -83,7 +105,7 @@ export const Home = () => {
 
       }
 
-
+console.log(contours)
     return (
     <>
     <div style={{display:'flex',justifyContent:'space-evenly',alignItem:'center'}}>
@@ -92,6 +114,47 @@ export const Home = () => {
 
     <input type='number' min={0.1} style={{width:"100px"}} max={2} step={0.1} value={scale} onChange={(e) => setScale(e.target.value)}/>
     
+    <input type='file' accept="application/JSON" onChange={(e) => {
+
+        var reader = new FileReader();
+
+        reader.addEventListener('load', function() {
+          var result = JSON.parse(reader.result); // Parse the result into an object 
+     
+
+          let checkIfegz = contours.findIndex(old => old.image === result.image)
+
+          if(checkIfegz === -1){
+   
+              setContours(old =>([...old,{
+   
+                image: result.image,
+                contours: result.contours
+      
+                }]
+                
+                ))
+   
+          }
+            else{
+  
+              contours[checkIfegz].contours.push(result.contours)
+    
+            }
+          
+        
+        });
+
+       reader.readAsText(e.target.files[0])
+
+        
+        
+        //addFromFile()
+
+        }
+      
+      }/> 
+
     {!draw ? <button style={{padding:'5px'}} onClick={(e)=>{
       e.preventDefault();
       setSave(false) 
